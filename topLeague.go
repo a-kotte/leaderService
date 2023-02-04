@@ -6,7 +6,7 @@ import (
 
 func topManagers(numManager int) []int {
 
-	url := "https://fantasy.premierleague.com/api/leagues-classic/314/standings"
+	url := "https://fantasy.premierleague.com/api/leagues-classic/314/standings?page_standings=1"
 
 	resBody := callAPI(url)
 

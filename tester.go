@@ -13,28 +13,105 @@ func main() {
     playerMap := playerNameMap()        
 
     // start timer
-    start := time.Now()
-    
-    // fetch top 10 managers and initialize map for player counts
-    topGs := topManagers(50)
-    transferInCounts := make(map[int]int)
-    
-    for _,G := range topGs {
-        // fetch current and prior team and use difference to make list of transferred players
-        currTeam := team(G, currentGameweek)
-        oldTeam := team(G, currentGameweek-1)                
-        newPlayers := Difference(currTeam, oldTeam)
+    start := time.Now()     
 
-        // for each transferred in player, add to the map
-        for _,player:= range newPlayers {            
-            val, ok := transferInCounts[player]            
-            if ok {            
-                transferInCounts[player] = val+1
-            }else {
-                transferInCounts[player] = 1
-            }
-        }
+    // fetch top 10 managers and initialize map for player counts
+    numManagers := 50
+	topGs := topManagers(numManagers)
+    
+    // create batches for concurrency
+	batch1 := topGs[:10]
+    batch2 := topGs[10:20]
+    batch3 := topGs[20:30]
+    batch4 := topGs[30:40]
+    batch5 := topGs[40:50] 
+    c1 := make(chan map[int]int)
+    c2 := make(chan map[int]int)
+    c3 := make(chan map[int]int)
+    c4 := make(chan map[int]int)
+    c5 := make(chan map[int]int)
+    // var transferInCount1, transferInCount2, transferInCount3, transferInCount4 map[int]int
+
+    go topTransfersForGameweek(currentGameweek, batch1, c1)  
+    go topTransfersForGameweek(currentGameweek, batch2, c2)  
+    go topTransfersForGameweek(currentGameweek, batch3, c3)  
+    go topTransfersForGameweek(currentGameweek, batch4, c4) 
+    go topTransfersForGameweek(currentGameweek, batch5, c5)  
+    transferInCounts := make(map[int] int)
+    for {
+        transferInCount1, open := <- c1
+        if !open {
+            break
+        }      
+        for k, v := range transferInCount1 {
+            // fmt.Println(" TES TEST ", playerName(k, playerMap)) 
+            val, ok := transferInCounts[k]            
+                if ok {            
+                    transferInCounts[k] = val+v
+                }else {                    
+                    transferInCounts[k] = v
+                }
+        }  
     }
+    for {
+        transferInCount2, open := <- c2
+        if !open {
+            break
+        }  
+        for k, v := range transferInCount2 {
+            val, ok := transferInCounts[k]            
+                if ok {            
+                    transferInCounts[k] = val+v
+                }else {
+                    transferInCounts[k] = v
+                }
+        }      
+    }
+    for {
+        transferInCount3, open := <- c3
+        if !open {
+            break
+        }    
+        for k, v := range transferInCount3 {
+            val, ok := transferInCounts[k]            
+                if ok {            
+                    transferInCounts[k] = val+v
+                }else {
+                    transferInCounts[k] = v
+                }
+        }    
+    }
+    for {
+        transferInCount4, open := <- c4
+        if !open {
+            break
+        }   
+        for k, v := range transferInCount4 {
+            val, ok := transferInCounts[k]            
+                if ok {            
+                    transferInCounts[k] = val+v
+                }else {
+                    transferInCounts[k] = v
+                }
+        }     
+    }
+    for {
+        transferInCount5, open := <- c5
+        if !open {
+            break
+        }   
+        for k, v := range transferInCount5 {
+            val, ok := transferInCounts[k]            
+                if ok {            
+                    transferInCounts[k] = val+v
+                }else {
+                    transferInCounts[k] = v
+                }
+        }     
+    }
+
+    // transferInCounts := topTransfersForGameweek(currentGameweek, topGs)    
+    
     duration := time.Since(start)
 
     // Sort the list of keys by value
@@ -48,7 +125,7 @@ func main() {
     
     fmt.Println("Top Players are: ")
     for i, k := range keys {
-        fmt.Println(i+1, playerName(k, playerMap))
+        fmt.Println(i+1, playerName(k, playerMap), "number of managers transferring in = ", transferInCounts[k])
     }
 
     

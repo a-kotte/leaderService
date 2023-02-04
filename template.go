@@ -60,3 +60,13 @@ type TeamWeekly struct {
 		IsViceCaptain bool `json:"is_vice_captain"`
 	} `json:"picks"`
 }
+
+type TransferHistory[] struct {
+	ElementIn      int       `json:"element_in"`
+	ElementInCost  int       `json:"element_in_cost"`
+	ElementOut     int       `json:"element_out"`
+	ElementOutCost int       `json:"element_out_cost"`
+	Entry          int       `json:"entry"`	
+	Time           time.Time `json:"time"`
+	Event          int       `json:"event,omitempty"`
+}

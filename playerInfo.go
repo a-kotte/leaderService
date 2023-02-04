@@ -5,10 +5,10 @@ func playerName(playerID int, playerMap map[int]string) string {
 	return playerMap[playerID] 		
 }
 
+// create a map of player IDs -> player names using bootstrap
 func playerNameMap() map[int]string {	
+	
 	players := bootstrap().Elements
-	// var playerName string
-
 	playerNameMap := make(map[int]string)
 
 	for _, player := range players {				
