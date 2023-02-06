@@ -10,5 +10,4 @@ Run the command below then follow the prompts to view the top 10 transferred IN 
 
 ```
 $ go run .
-
 ```
