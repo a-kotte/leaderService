@@ -15,16 +15,48 @@ func main() {
     // start timer
     start := time.Now()     
 
-    // fetch top 10 managers and initialize map for player counts
-    numManagers := 50
+    // prompt user for how many managers to look through
+    fmt.Println("Enter the number for which option you would like:")
+    fmt.Println("(1) top transfers of top 50 managers")
+    fmt.Println("(2) top transfers of top 100 managers")
+    fmt.Println("(3) top transfers of top 1,000 managers")
+    // fmt.Println("(4) top transfers of top 10,000 managers")
+    // TODO
+    // fmt.Println("(1) top transfers of top 100 managers")
+    var option1 int
+    var numManagers int
+    fmt.Scanln(&option1)
+    if option1 == 1 {
+        numManagers = 50
+    } else if option1 == 2 {
+        numManagers = 100
+    } else if option1 == 3 {
+        numManagers = 1000
+    }
+
+    // fetch top 10 managers and initialize map for player counts    
 	topGs := topManagers(numManagers)
+
+    // prompt for transfers in or out
+    fmt.Println("Would you like to see transfers in or transfers out?")
+    fmt.Println("(1) In")
+    fmt.Println("(2) Out")
+    var option2 int
+    var transferInOrOut string
+    fmt.Scanln(&option2)
+    if option2 == 1 {
+        transferInOrOut = "in"
+    } else {
+        transferInOrOut = "out"
+    }
     
     // create batches for concurrency
-	batch1 := topGs[:10]
-    batch2 := topGs[10:20]
-    batch3 := topGs[20:30]
-    batch4 := topGs[30:40]
-    batch5 := topGs[40:50] 
+    b1, b2, b3, b4, b5 := numManagers/5, 2*numManagers/5, 3*numManagers/5, 4*numManagers/5, numManagers    
+	batch1 := topGs[:b1]
+    batch2 := topGs[b1:b2]
+    batch3 := topGs[b2:b3]
+    batch4 := topGs[b3:b4]
+    batch5 := topGs[b4:b5] 
     c1 := make(chan map[int]int)
     c2 := make(chan map[int]int)
     c3 := make(chan map[int]int)
@@ -32,11 +64,11 @@ func main() {
     c5 := make(chan map[int]int)
     // var transferInCount1, transferInCount2, transferInCount3, transferInCount4 map[int]int
 
-    go topTransfersForGameweek(currentGameweek, batch1, c1)  
-    go topTransfersForGameweek(currentGameweek, batch2, c2)  
-    go topTransfersForGameweek(currentGameweek, batch3, c3)  
-    go topTransfersForGameweek(currentGameweek, batch4, c4) 
-    go topTransfersForGameweek(currentGameweek, batch5, c5)  
+    go topTransfersForGameweek(currentGameweek, batch1, c1, transferInOrOut)  
+    go topTransfersForGameweek(currentGameweek, batch2, c2, transferInOrOut)  
+    go topTransfersForGameweek(currentGameweek, batch3, c3, transferInOrOut)  
+    go topTransfersForGameweek(currentGameweek, batch4, c4, transferInOrOut) 
+    go topTransfersForGameweek(currentGameweek, batch5, c5, transferInOrOut)  
     transferInCounts := make(map[int] int)
     for {
         transferInCount1, open := <- c1
@@ -123,24 +155,12 @@ func main() {
         return transferInCounts[keys[i]] > transferInCounts[keys[j]]
     })    
     
-    fmt.Println("Top Players are: ")
-    for i, k := range keys {
-        fmt.Println(i+1, playerName(k, playerMap), "number of managers transferring in = ", transferInCounts[k])
-    }
-
-    
-    // fmt.Println("len is ", len(topGs))
-    // for _,G := range topGs {
-    //     fmt.Println("Top G is ", G)
-    // }
-    
-    // playerMap := playerNameMap()
-
-    // playerName := playerName(357, playerMap)
-    
-    // fmt.Println("player name is", playerName)
-
-    // Code to measure
+    // Print out top 10
+    fmt.Println("Top 10 Players transferred ", transferInOrOut, " are:")    
+    for i:= 0; i < 10; i++ {
+        k := keys[i]
+        fmt.Println(i+1, playerName(k, playerMap), "| Number of managers transferring ", transferInOrOut, ":", transferInCounts[k])
+    }    
     
 
     // Formatted string, such as "2h3m0.5s" or "4.503μs"
