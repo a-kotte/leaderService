@@ -155,12 +155,13 @@ func main() {
     })    
     
     // Print out top 10
-    fmt.Println("Top 10 Players transferred ", transferInOrOut, " are:")    
+    fmt.Println("#####################################################################################################")    
+    fmt.Println("Top 10 Players transferred", transferInOrOut, "are:")    
     for i:= 0; i < 10; i++ {
         k := keys[i]
-        playerRank := strconv.Itoa(i+1) + " " + playerName(k, playerMap)
-        numTransfers := "Number of managers transferring " + transferInOrOut + ": " + strconv.Itoa(transferInCounts[k])
-        fmt.Printf("| %-50s | %50s |\n", playerRank, numTransfers)
+        playerRank := strconv.Itoa(i+1) + ") " + playerName(k, playerMap)
+        numTransfers := "Number of managers transferring" + transferInOrOut + ": " + strconv.Itoa(transferInCounts[k])
+        fmt.Printf("%-30s | %40s \n", playerRank, numTransfers)
         //fmt.Printf("| %20s | %20s |\n", "vegetables", "fruits")
     }    
     
