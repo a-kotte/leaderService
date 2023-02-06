@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"sort"
+	"strconv"
 	"time"
 )
 
@@ -20,9 +21,7 @@ func main() {
     fmt.Println("(1) top transfers of top 50 managers")
     fmt.Println("(2) top transfers of top 100 managers")
     fmt.Println("(3) top transfers of top 1,000 managers")
-    // fmt.Println("(4) top transfers of top 10,000 managers")
-    // TODO
-    // fmt.Println("(1) top transfers of top 100 managers")
+    // fmt.Println("(4) top transfers of top 10,000 managers")    
     var option1 int
     var numManagers int
     fmt.Scanln(&option1)
@@ -159,7 +158,10 @@ func main() {
     fmt.Println("Top 10 Players transferred ", transferInOrOut, " are:")    
     for i:= 0; i < 10; i++ {
         k := keys[i]
-        fmt.Println(i+1, playerName(k, playerMap), "| Number of managers transferring ", transferInOrOut, ":", transferInCounts[k])
+        playerRank := strconv.Itoa(i+1) + " " + playerName(k, playerMap)
+        numTransfers := "Number of managers transferring " + transferInOrOut + ": " + strconv.Itoa(transferInCounts[k])
+        fmt.Printf("| %-50s | %50s |\n", playerRank, numTransfers)
+        //fmt.Printf("| %20s | %20s |\n", "vegetables", "fruits")
     }    
     
 

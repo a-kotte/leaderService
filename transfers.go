@@ -52,31 +52,6 @@ func transfersOutForGameweek(managerID, gameweek int) []int {
 	return gameweekTransfersOut
 }
 
-// // return top transfers IN for top 50 managers
-// func topTransfersForGameweek(gameweek int, managers []int) map[int]int {
-// 	//  initialize map for player counts	
-//     transferInCounts := make(map[int]int)	
-    
-//     for _,G := range managers {
-//         // fetch current and prior team and use difference to make list of transferred players
-//         currTeam := team(G, gameweek)
-//         oldTeam := team(G, gameweek-1)                
-//         newPlayers := Difference(currTeam, oldTeam)
-//         // newPlayers := transfersInForGameweek(G, gameweek)
-
-//         // for each transferred in player, add to the map
-//         for _,player:= range newPlayers {            
-//             val, ok := transferInCounts[player]            
-//             if ok {            
-//                 transferInCounts[player] = val+1
-//             }else {
-//                 transferInCounts[player] = 1
-//             }
-//         }
-//     }	
-// 	return transferInCounts
-// }
-
 // return top transfers IN for top 50 managers
 func topTransfersForGameweek(gameweek int, managers []int, c chan map[int]int, transferInOrOut string ) {
 	//  initialize map for player counts	
@@ -91,9 +66,7 @@ func topTransfersForGameweek(gameweek int, managers []int, c chan map[int]int, t
 			newPlayers = Difference(currTeam, oldTeam)
 		} else {
 			newPlayers = Difference(oldTeam, currTeam)
-		}
-        		
-        // newPlayers := transfersInForGameweek(G, gameweek)
+		}        	        
 
         // for each transferred in player, add to the map
         for _,player:= range newPlayers {            
