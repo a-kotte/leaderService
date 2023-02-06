@@ -4,14 +4,11 @@ This project is intended to serve useful information using APIs for [fantasy pre
 
 ## Available Services
 
-### Current gamewwek
+### Top transfers
 
-Use CurrentGameweek() to retrieve the current gameweek.
+Run the command below then follow the prompts to view the top 10 transferred IN or OUT players for the inputted number of managers
 
-### Top n managers right now
+```
+$ go run .
 
-Use topManagers(num_managers) to retrieve top num_managers managers for the current gameweek. Code snippet to be included.
-
-### Top n transfers for top n managers
-
-Use topTransfers(num_transfers, num_managers) to retrieve top num_transfers transfers from top num_managers managers for the current gameweek. Code snippet to be included.
+```
